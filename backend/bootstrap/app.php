@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -18,5 +20,22 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn () => url('/'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        if (env("APP_DEBUG") === false) {
+            if (request()->is('api/*')) {
+                $exceptions->render(function (Throwable $te) {
+
+                    $previous = $te->getPrevious();
+
+                    if ($previous instanceof ModelNotFoundException) {
+                        return response()->json(['message' => 'Not found.'], 404);
+                    }
+
+                    if ($previous instanceof AuthorizationException) {
+                        return response()->json(['message' => 'Unauthorized'], 403);
+                    }
+
+                    return response()->json(['message' => 'Internal server error.'], 500);
+                });
+            }
+        }
     })->create();
