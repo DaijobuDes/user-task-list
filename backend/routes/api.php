@@ -1,12 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\LoginController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
-
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
 
 if (env('APP_DEBUG')) {
     Route::get('/test', function () {
@@ -20,4 +16,7 @@ Route::post('/auth/login', [LoginController::class, 'login'])->name('auth.login'
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [LoginController::class, 'logout'])->name('auth.logout');
+
+    Route::put('tasks/update-positions', [TaskController::class, 'updatePositions'])->name('tasks.update-positions');
+    Route::resource('tasks', TaskController::class);
 });
