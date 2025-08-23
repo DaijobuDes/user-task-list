@@ -46,8 +46,6 @@ const backendUrl = config.public.apiUrl;
 
 const items = ref<Task[]>([])
 const newMessage = ref()
-// const submitMessage = ref()
-// const contentBox = ref<string>()
 const dragIndex = ref<number | null>(null)
 
 if (!auth.isAuthenticated) {
@@ -112,7 +110,7 @@ const submitTask = async () => {
       id: response.data.id, // make sure backend returns id
       user_id: response.data.user_id,
       content: newMessage.value,
-      is_finished: 0,
+      is_finished: false,
       position: newPos,
     })
 
