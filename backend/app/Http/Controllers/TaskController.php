@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\IndexTaskRequest;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Repositories\Interfaces\TaskRepositoryInterface;
 use Carbon\CarbonImmutable;
@@ -37,7 +38,9 @@ class TaskController extends Controller
             $date = CarbonImmutable::parse($validated['date']);
         }
 
-        return response()->json($this->taskRepository->index($userId, $date), 200);
+        $tasks = $this->taskRepository->index($userId, $date);
+
+        return TaskResource::collection($tasks)->response();
     }
 
     /**
@@ -52,13 +55,9 @@ class TaskController extends Controller
         $date = CarbonImmutable::parse($validated['date']);
         $user = auth()->id();
 
-        $result = $this->taskRepository->store($user, $date, $content);
+        $task = $this->taskRepository->store($user, $date, $content);
 
-        return response()->json([
-            'data' => [
-                $result
-            ],
-        ], 201);
+        return (new TaskResource($task))->response()->setStatusCode(201);
     }
 
     /**
@@ -73,11 +72,9 @@ class TaskController extends Controller
         $user = auth()->id();
         $content = $validated['content'];
 
-        $result = $this->taskRepository->update($user, $taskId, $content);
+        $task = $this->taskRepository->update($user, $taskId, $content);
 
-        return response()->json([
-            'data' => $result,
-        ], 200);
+        return (new TaskResource($task))->response()->setStatusCode(200);
     }
 
     /**
@@ -95,15 +92,4 @@ class TaskController extends Controller
             'message' => 'Success',
         ], 200);
     }
-
-    // public function dates(): JsonResponse
-    // {
-    //     $this->authorize('viewAny', Task::class);
-    //     $user = auth()->id();
-    //     $dates = $this->taskRepository->dates($user);
-
-    //     return response()->json([
-    //         'data' => $dates
-    //     ], 200);
-    // }
 }
