@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\IndexTaskRequest;
 use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskPositionRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
@@ -53,9 +54,10 @@ class TaskController extends Controller
         $validated = $request->validated();
         $content = $validated['content'];
         $date = CarbonImmutable::parse($validated['date']);
+        $position = $validated['position'] ?? 0;
         $user = auth()->id();
 
-        $task = $this->taskRepository->store($user, $date, $content);
+        $task = $this->taskRepository->store($user, $date, $content, $position);
 
         return (new TaskResource($task))->response()->setStatusCode(201);
     }
@@ -71,8 +73,9 @@ class TaskController extends Controller
         $validated = $request->validated();
         $user = auth()->id();
         $content = $validated['content'];
+        $isFinished = $validated['is_finished'];
 
-        $task = $this->taskRepository->update($user, $taskId, $content);
+        $task = $this->taskRepository->update($user, $taskId, $content, $isFinished);
 
         return (new TaskResource($task))->response()->setStatusCode(200);
     }
@@ -87,6 +90,24 @@ class TaskController extends Controller
         $user = auth()->id();
 
         $this->taskRepository->destroy($user, $taskId);
+
+        return response()->json([
+            'message' => 'Success',
+        ], 200);
+    }
+
+    public function updatePositions(UpdateTaskPositionRequest $request): JsonResponse
+    {
+        $validated = $request->validated('items');
+        $this->authorize('updatePosition', Task::class);
+
+        $status = $this->taskRepository->updatePositions($validated);
+
+        if (!$status) {
+            return response()->json([
+                'message' => 'Failed to update positions.',
+            ], 500);
+        }
 
         return response()->json([
             'message' => 'Success',

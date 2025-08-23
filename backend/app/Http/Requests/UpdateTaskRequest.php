@@ -26,6 +26,9 @@ class UpdateTaskRequest extends FormRequest
                 'required',
                 'max:8192',
             ],
+            'is_finished' => [
+                'boolean'
+            ]
         ];
     }
 }

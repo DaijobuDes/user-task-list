@@ -5,7 +5,9 @@ namespace App\Repositories;
 use App\Models\Task;
 use App\Repositories\Interfaces\TaskRepositoryInterface;
 use Carbon\CarbonImmutable;
+use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class TaskRepository implements TaskRepositoryInterface
 {
@@ -19,19 +21,20 @@ class TaskRepository implements TaskRepositoryInterface
         ])->paginate(self::$paginateLimit);
     }
 
-    public function store(int $userId, CarbonImmutable $date, string $content): Task
+    public function store(int $userId, CarbonImmutable $date, string $content, int $position): Task
     {
         return Task::create([
             'user_id' => $userId,
             'task_date' => $date,
             'content' => $content,
+            'position' => $position,
         ]);
     }
 
-    public function update(int $userId, int $taskId, string $content): Task
+    public function update(int $userId, int $taskId, string $content, int $isFinished): Task
     {
         $task = Task::findOrFail($taskId);
-        $task->updateOrFail(['content' => $content]);
+        $task->updateOrFail(['content' => $content, 'is_finished' => $isFinished]);
         return $task->fresh();
     }
 
@@ -42,15 +45,21 @@ class TaskRepository implements TaskRepositoryInterface
         return true;
     }
 
-    // public function dates(int $userId): array
-    // {
-    //     return Task::where(['user_id' => $userId])
-    //         ->distinct()->pluck('task_date')->toArray();
-    // }
-
-    public function updatePositions(mixed $data)
+    public function updatePositions(array $data): bool
     {
-        //
+        try {
+            DB::transaction(function () use ($data) {
+                foreach ($data as $t) {
+                    $status = Task::where(['id' => $t['id']])->update(['position' => $t['position']]);
+                    if (!$status) {
+                        throw new Exception("Cannot update ID: {$t['id']}");
+                    }
+                }
+            });
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     public function findById(int $id): Task

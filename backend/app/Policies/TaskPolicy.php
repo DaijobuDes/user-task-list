@@ -64,6 +64,11 @@ class TaskPolicy
         return false;
     }
 
+    public function updatePosition(User $user): bool
+    {
+        return true;
+    }
+
     private function policyResponse(bool $status): Response
     {
         return $status ? Response::allow() : Response::deny('Forbidden');
