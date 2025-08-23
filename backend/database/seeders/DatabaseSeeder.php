@@ -25,13 +25,15 @@ class DatabaseSeeder extends Seeder
         for ($i = -5; $i <= 5; $i++) {
             $date = now()->addDays($i)->startOfDay();
 
-            Task::factory(10)->create([
-                'user_id' => $user,
-                'task_date' => $date,
-                'content' => fake()->text(),
-                'is_finished' => fake()->boolean(33),
-                'position' => 0,
-            ]);
+            for ($j = 0; $j < 10; $j++) {
+                Task::factory()->create([
+                    'user_id' => $user,
+                    'task_date' => $date,
+                    'content' => fake()->text(),
+                    'is_finished' => fake()->boolean(33),
+                    'position' => 0,
+                ]);
+            }
         }
     }
 }

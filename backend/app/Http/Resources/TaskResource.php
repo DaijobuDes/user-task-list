@@ -18,7 +18,7 @@ class TaskResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'content' => $this->content,
-            'is_finished' => $this->is_finished,
+            'is_finished' => $this->is_finished ? true : false,
             'position' => $this->position,
         ];
     }

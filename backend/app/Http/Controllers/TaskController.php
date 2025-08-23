@@ -73,7 +73,7 @@ class TaskController extends Controller
         $validated = $request->validated();
         $user = auth()->id();
         $content = $validated['content'];
-        $isFinished = $validated['is_finished'];
+        $isFinished = $validated['is_finished'] ?? 0;
 
         $task = $this->taskRepository->update($user, $taskId, $content, $isFinished);
 
