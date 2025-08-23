@@ -28,6 +28,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
+import { useAuthStore } from "@/stores/useAuthStore"
 
 const props = defineProps<{
   user: {
@@ -36,6 +37,14 @@ const props = defineProps<{
     avatar: string
   }
 }>()
+
+const auth = useAuthStore()
+const router = useRouter()
+
+const onLogout = () => {
+  auth.logout()
+  router.push('/')
+}
 
 const { isMobile } = useSidebar()
 </script>
@@ -82,15 +91,15 @@ const { isMobile } = useSidebar()
               </div>
             </div>
           </DropdownMenuLabel>
-          <DropdownMenuSeparator />
+          <!-- <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <Sparkles />
               Upgrade to Pro
             </DropdownMenuItem>
           </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
+          <DropdownMenuSeparator /> -->
+          <!-- <DropdownMenuGroup>
             <DropdownMenuItem>
               <BadgeCheck />
               Account
@@ -104,8 +113,8 @@ const { isMobile } = useSidebar()
               Notifications
             </DropdownMenuItem>
           </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuSeparator /> -->
+          <DropdownMenuItem @select="onLogout">
             <LogOut />
             Log out
           </DropdownMenuItem>

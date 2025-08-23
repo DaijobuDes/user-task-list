@@ -54,6 +54,9 @@ const props = defineProps<{
               </div>
               <Input id="password" type="password" v-model="auth.password" required />
             </div>
+            <div v-if="auth.errorMessage" class="text-sm text-red-600">
+              {{ auth.errorMessage }}
+            </div>
             <div class="flex flex-col gap-3">
               <Button type="submit" class="w-full">
                 Login

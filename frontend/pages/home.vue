@@ -46,10 +46,9 @@ const backendUrl = config.public.apiUrl;
 
 const items = ref<Task[]>([])
 const newMessage = ref()
-const submitMessage = ref()
-const contentBox = ref<string>()
-
-
+// const submitMessage = ref()
+// const contentBox = ref<string>()
+const dragIndex = ref<number | null>(null)
 
 if (!auth.isAuthenticated) {
   router.push("/")
@@ -61,17 +60,13 @@ watch(calendar, async () => {
   sortItemsInPlace()
 })
 
-watch(items, async () => {
-  console.log(items.value)
-})
-
 onMounted(async () => {
   const response = await fetchTasks()
   items.value = response.data
   sortItemsInPlace()
 })
 
-async function fetchTasks() {
+const fetchTasks = async () => {
   try {
   const response = await $fetch<TaskResponse>(`${backendUrl}/api/tasks`, {
     method: "GET",
@@ -113,8 +108,6 @@ const submitTask = async () => {
       }
     })
 
-    console.log(response)
-
     items.value.push({
       id: response.data.id, // make sure backend returns id
       user_id: response.data.user_id,
@@ -129,8 +122,6 @@ const submitTask = async () => {
 
   }
 }
-
-const dragIndex = ref<number | null>(null)
 
 const onTaskChange = async (id: number, state: boolean|number, content: string) => {
   const payload = {
@@ -147,8 +138,7 @@ const onTaskChange = async (id: number, state: boolean|number, content: string) 
       }
     })
   } catch (err: any) {
-    console.error("Failed to update positions", err)
-    // optionally rollback or show error toast
+    console.error("Failed to update task", err)
   }
 }
 

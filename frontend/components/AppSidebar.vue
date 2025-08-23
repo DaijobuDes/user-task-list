@@ -18,12 +18,14 @@ import {
   SidebarSeparator,
 } from '@/components/ui/sidebar'
 
+const auth = useAuthStore()
+
 const props = defineProps<SidebarProps>()
 // This is sample data.
 const data = {
   user: {
     name: "demo user",
-    email: "m@example.com",
+    email: auth.email,
     // avatar: "/avatars/shadcn.jpg",
     avatar: "https://cdn.discordapp.com/avatars/451974524053749780/30d1ebd03955b6bf6df3491217b062c0.png?size=256"
   },
