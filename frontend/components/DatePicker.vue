@@ -7,14 +7,6 @@ import {
 
 import { useCalendarStore } from '@/stores/useCalendarStore';
 const calendar = useCalendarStore()
-// import { getLocalTimeZone, parseDate, today, type DateValue } from '@internationalized/date'
-
-// // const date = ref<DateValue>(today(getLocalTimeZone()))
-// const date = ref<DateValue>(parseDate("2025-08-02"))
-
-// watch(date, (newDate) => {
-//     console.log(newDate.toString())
-// })
 
 </script>
 

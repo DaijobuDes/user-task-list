@@ -5,6 +5,7 @@ namespace App\Repositories\Interfaces;
 use App\Models\Task;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 interface TaskRepositoryInterface
 {
@@ -15,4 +16,5 @@ interface TaskRepositoryInterface
     // public function dates(int $userId): array;
     public function updatePositions(array $data): bool;
     public function findById(int $id): Task;
+    public function searchTerm(int $userId, string $word): Collection;
 }
