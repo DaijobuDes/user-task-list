@@ -69,6 +69,11 @@ class TaskPolicy
         return true;
     }
 
+    public function search(User $user): bool
+    {
+        return true;
+    }
+
     private function policyResponse(bool $status): Response
     {
         return $status ? Response::allow() : Response::deny('Forbidden');

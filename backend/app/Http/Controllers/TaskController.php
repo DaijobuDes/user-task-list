@@ -117,6 +117,7 @@ class TaskController extends Controller
 
     public function search(SearchTaskRequest $request): JsonResponse
     {
+        $this->authorize('search', Task::class);
         $user = auth()->id();
         $validated = $request->validated();
         $term = $validated['term'];
