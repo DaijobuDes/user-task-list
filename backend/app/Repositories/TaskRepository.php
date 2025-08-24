@@ -7,6 +7,7 @@ use App\Repositories\Interfaces\TaskRepositoryInterface;
 use Carbon\CarbonImmutable;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class TaskRepository implements TaskRepositoryInterface
@@ -65,5 +66,13 @@ class TaskRepository implements TaskRepositoryInterface
     public function findById(int $id): Task
     {
         return Task::findOrFail($id);
+    }
+
+    public function searchTerm(int $userId, string $word): Collection
+    {
+        return Task::where(['user_id' => $userId])
+            ->whereLike('content', "%{$word}%")
+            ->limit(self::$paginateLimit)
+            ->get();
     }
 }

@@ -4,6 +4,7 @@ export type StoredTask = {
   content: string,
   is_finished: number,
   position: number,
+  date: string
 }
 
 export type StoreTaskResponse = {

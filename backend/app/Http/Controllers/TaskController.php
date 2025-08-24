@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\IndexTaskRequest;
+use App\Http\Requests\SearchTaskRequest;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskPositionRequest;
 use App\Http\Requests\UpdateTaskRequest;
@@ -112,5 +113,17 @@ class TaskController extends Controller
         return response()->json([
             'message' => 'Success',
         ], 200);
+    }
+
+    public function search(SearchTaskRequest $request): JsonResponse
+    {
+        $this->authorize('search', Task::class);
+        $user = auth()->id();
+        $validated = $request->validated();
+        $term = $validated['term'];
+
+        $tasks = $this->taskRepository->searchTerm($user, $term);
+
+        return TaskResource::collection($tasks)->response();
     }
 }

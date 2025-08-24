@@ -18,5 +18,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [LoginController::class, 'logout'])->name('auth.logout');
 
     Route::put('tasks/update-positions', [TaskController::class, 'updatePositions'])->name('tasks.update-positions');
+    Route::get('tasks/search', [TaskController::class, 'search'])->name('tasks.search');
     Route::resource('tasks', TaskController::class);
 });

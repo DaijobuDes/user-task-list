@@ -75,7 +75,6 @@ const fetchTasks = async () => {
       Authorization: `Bearer ${auth.authToken}`
     }
   })
-  console.log(response)
   return response
   } catch (err: any) {
     return {"data": []}
@@ -112,6 +111,7 @@ const submitTask = async () => {
       content: newMessage.value,
       is_finished: false,
       position: newPos,
+      date: response.data.date
     })
 
     sortItemsInPlace()
@@ -192,7 +192,7 @@ const deleteItem = async (id: number) => {
       }
     })
   } catch (err: any) {
-    console.error(err);
+    console.error("Failed to delete item", err);
   }
 
 }
