@@ -33,6 +33,7 @@ class LoginController extends Controller
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
+            'name' => $user->name,
             'token' => $token,
         ], 201);
     }
